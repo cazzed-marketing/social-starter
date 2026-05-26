@@ -1,0 +1,1531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cazzed Social — Stop Posting Random Content</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --purple: #3D145A;
+    --purple-mid: #5B1F85;
+    --lavender: #CFA8FF;
+    --lavender-light: #E8D5FF;
+    --lime: #D7FF65;
+    --pink: #FFD6F5;
+    --off-white: #F7F4FA;
+    --white: #FFFFFF;
+    --text-dark: #1A0A27;
+    --text-muted: #7B6A8A;
+    --card-shadow: 0 20px 60px rgba(61,20,90,0.12);
+    --card-shadow-hover: 0 32px 80px rgba(61,20,90,0.2);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--off-white);
+    color: var(--text-dark);
+    overflow-x: hidden;
+  }
+  h1, h2, h3, h4 { font-family: 'Bricolage Grotesque', sans-serif; }
+
+  /* ─── NAV ─── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1rem 2.5rem;
+    background: rgba(247,244,250,0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(61,20,90,0.06);
+    transition: all 0.3s;
+  }
+  .nav-logo {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-weight: 800; font-size: 1.4rem; color: var(--purple);
+    letter-spacing: -0.04em;
+  }
+  .nav-logo span { color: var(--lavender); }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a { text-decoration: none; color: var(--text-muted); font-size: 0.9rem; font-weight: 500; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--purple); }
+  .nav-cta {
+    background: var(--purple); color: var(--white);
+    border: none; padding: 0.65rem 1.4rem;
+    border-radius: 100px; font-family: 'Bricolage Grotesque', sans-serif;
+    font-weight: 700; font-size: 0.85rem; cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 20px rgba(61,20,90,0.3);
+    white-space: nowrap;
+  }
+  .nav-cta:hover { transform: scale(1.04); box-shadow: 0 8px 28px rgba(61,20,90,0.4); }
+  .nav-hamburger { display: none; background: none; border: none; cursor: pointer; flex-direction: column; gap: 5px; }
+  .nav-hamburger span { display: block; width: 24px; height: 2px; background: var(--purple); border-radius: 2px; transition: all 0.3s; }
+
+  /* ─── HERO ─── */
+  .hero {
+    min-height: 100vh; padding: 8rem 2.5rem 4rem;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 4rem; align-items: center;
+    max-width: 1280px; margin: 0 auto;
+  }
+  .hero-left { position: relative; z-index: 2; }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: var(--white); border: 1px solid rgba(207,168,255,0.4);
+    padding: 0.4rem 1rem; border-radius: 100px; margin-bottom: 1.5rem;
+    font-size: 0.8rem; font-weight: 500; color: var(--purple-mid);
+    box-shadow: 0 4px 20px rgba(207,168,255,0.2);
+    animation: fadeUp 0.6s ease both;
+  }
+  .hero-badge .dot { width: 8px; height: 8px; background: var(--lime); border-radius: 50%; animation: pulse 2s infinite; }
+  .hero-h1 {
+    font-size: clamp(2.6rem, 5vw, 4.8rem); font-weight: 800;
+    line-height: 1.05; letter-spacing: -0.03em;
+    color: var(--purple); margin-bottom: 1.5rem;
+    animation: fadeUp 0.6s 0.1s ease both;
+  }
+  .hero-h1 .accent { color: var(--purple-mid); position: relative; display: inline-block; }
+  .hero-h1 .accent::after {
+    content: ''; position: absolute; bottom: -4px; left: 0; right: 0;
+    height: 6px; background: var(--lime); border-radius: 3px; z-index: -1;
+  }
+  .hero-sub {
+    font-size: 1.05rem; color: var(--text-muted); line-height: 1.7;
+    max-width: 500px; margin-bottom: 2rem;
+    animation: fadeUp 0.6s 0.2s ease both;
+  }
+  .hero-sub strong { color: var(--purple); font-weight: 500; }
+  .hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; animation: fadeUp 0.6s 0.3s ease both; }
+  .btn-primary {
+    background: var(--purple); color: var(--white);
+    border: none; padding: 0.9rem 2rem; border-radius: 100px;
+    font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 1rem;
+    cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 8px 30px rgba(61,20,90,0.35);
+  }
+  .btn-primary:hover { transform: translateY(-2px) scale(1.02); box-shadow: 0 14px 40px rgba(61,20,90,0.45); }
+  .btn-secondary {
+    background: transparent; color: var(--purple);
+    border: 2px solid var(--purple); padding: 0.9rem 2rem; border-radius: 100px;
+    font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 1rem;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .btn-secondary:hover { background: var(--purple); color: var(--white); transform: translateY(-2px); }
+
+  .hero-right {
+    position: relative;
+    display: flex;
+    align-items: center;
+    animation: fadeUp 0.8s 0.4s ease both;
+  }
+
+  /* ─── HERO VIDEO PLACEHOLDER ─── */
+  .hero-video-wrap {
+    display: block;
+    width: 100%;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 32px 80px rgba(61,20,90,0.22), 0 0 0 1px rgba(207,168,255,0.18);
+    text-decoration: none;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  .hero-video-wrap:hover {
+    transform: translateY(-6px) scale(1.01);
+    box-shadow: 0 44px 100px rgba(61,20,90,0.3), 0 0 0 1px rgba(207,168,255,0.28);
+  }
+  .hero-video-ratio {
+    position: relative;
+    width: 100%;
+    padding-top: 56.25%; /* 16:9 */
+    background: var(--purple);
+    border-radius: 20px;
+    overflow: hidden;
+  }
+  .hero-video-fallback {
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, var(--purple) 0%, var(--purple-mid) 60%, #8B3FCC 100%);
+    border-radius: 20px;
+    z-index: 0;
+  }
+  .hero-video-cover {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    border-radius: 20px;
+    display: block;
+    z-index: 1;
+    transition: transform 0.4s, filter 0.3s;
+  }
+  .hero-video-wrap:hover .hero-video-cover {
+    transform: scale(1.03);
+    filter: brightness(0.85);
+  }
+  .hero-video-play {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%) scale(1);
+    width: 72px; height: 72px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.96);
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.3);
+    transition: transform 0.25s, background 0.2s;
+    z-index: 2;
+  }
+  .hero-video-wrap:hover .hero-video-play {
+    transform: translate(-50%, -50%) scale(1.12);
+    background: var(--lime);
+  }
+  .hero-video-badge {
+    position: absolute; bottom: 16px; left: 16px;
+    display: flex; align-items: center; gap: 0.5rem;
+    background: rgba(0,0,0,0.55);
+    backdrop-filter: blur(8px);
+    color: white; font-size: 0.78rem; font-weight: 600;
+    padding: 0.4rem 0.9rem; border-radius: 100px;
+    z-index: 2;
+    letter-spacing: 0.01em;
+  }
+  .float-card {
+    position: absolute; background: var(--white); border-radius: 20px;
+    box-shadow: var(--card-shadow); padding: 1rem 1.2rem;
+    transition: transform 0.3s; cursor: default;
+  }
+  .float-card:hover { transform: translateY(-6px) !important; box-shadow: var(--card-shadow-hover); }
+
+  /* Hero cards */
+  .card-main {
+    top: 0; left: 0; right: 0; padding: 1.4rem;
+    background: linear-gradient(135deg, var(--purple) 0%, var(--purple-mid) 100%);
+    color: var(--white);
+  }
+  .card-main .card-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.7; margin-bottom: 0.4rem; }
+  .card-main .card-big { font-family: 'Bricolage Grotesque', sans-serif; font-size: 1.6rem; font-weight: 800; letter-spacing: -0.03em; }
+  .card-main .card-sub { font-size: 0.85rem; opacity: 0.8; margin-top: 0.3rem; }
+  .card-main .card-bar { height: 6px; background: rgba(255,255,255,0.2); border-radius: 3px; margin-top: 0.8rem; overflow: hidden; }
+  .card-main .card-bar-fill { height: 100%; width: 72%; background: var(--lime); border-radius: 3px; animation: barFill 1.5s 1s ease both; }
+
+  .card-post {
+    top: 60px; right: -20px; width: 200px;
+    animation: float 4s 0s ease-in-out infinite;
+  }
+  .card-post img { width: 100%; height: 100px; object-fit: cover; border-radius: 12px; margin-bottom: 0.6rem; background: linear-gradient(135deg, var(--lavender) 0%, var(--pink) 100%); display: block; }
+  .card-post-img { width: 100%; height: 100px; border-radius: 12px; margin-bottom: 0.6rem; background: linear-gradient(135deg, #C084FC 0%, #F9A8D4 100%); position: relative; overflow: hidden; }
+  .card-post-img::after { content: '▶'; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); font-size: 1.4rem; color: white; opacity: 0.9; }
+  .card-post .post-likes { display: flex; align-items: center; gap: 6px; font-size: 0.75rem; color: var(--text-muted); }
+  .card-post .post-likes strong { color: var(--text-dark); }
+
+  .card-notify {
+    top: 200px; left: -30px; width: 230px;
+    animation: float 4s 1s ease-in-out infinite;
+    display: flex; align-items: center; gap: 0.8rem;
+  }
+  .notify-icon { width: 36px; height: 36px; border-radius: 50%; background: var(--lime); display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
+  .notify-text .notify-title { font-weight: 600; font-size: 0.8rem; color: var(--text-dark); }
+  .notify-text .notify-sub { font-size: 0.7rem; color: var(--text-muted); }
+
+  .card-analytics {
+    bottom: 80px; left: 10px; width: 240px;
+    animation: float 4s 0.5s ease-in-out infinite;
+  }
+  .analytics-row { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 0.6rem; }
+  .analytics-bar-wrap { display: flex; gap: 4px; align-items: flex-end; height: 50px; }
+  .a-bar { width: 14px; background: var(--lavender-light); border-radius: 4px 4px 0 0; transition: background 0.2s; }
+  .a-bar.active { background: var(--purple); }
+  .a-bar:hover { background: var(--purple-mid); }
+  .analytics-stat { text-align: right; }
+  .analytics-stat .stat-num { font-family: 'Bricolage Grotesque', sans-serif; font-size: 1.4rem; font-weight: 800; color: var(--purple); }
+  .analytics-stat .stat-label { font-size: 0.7rem; color: var(--text-muted); }
+
+  .card-testimonial {
+    bottom: 0; right: -10px; width: 240px;
+    animation: float 4s 1.5s ease-in-out infinite;
+  }
+  .test-stars { color: #FBBF24; font-size: 0.85rem; margin-bottom: 0.4rem; }
+  .test-text { font-size: 0.8rem; line-height: 1.5; color: var(--text-muted); margin-bottom: 0.6rem; }
+  .test-author { display: flex; align-items: center; gap: 0.5rem; }
+  .test-avatar { width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(135deg, var(--lavender), var(--pink)); }
+  .test-name { font-size: 0.75rem; font-weight: 600; color: var(--text-dark); }
+
+  .card-reel {
+    top: 320px; right: 20px; width: 120px;
+    padding: 0.8rem; animation: float 4s 2s ease-in-out infinite;
+  }
+  .reel-thumb { width: 100%; height: 160px; border-radius: 14px; background: linear-gradient(180deg, #6D28D9 0%, #EC4899 100%); position: relative; overflow: hidden; }
+  .reel-thumb::after { content: '▶'; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); color: white; font-size: 1.2rem; }
+  .reel-label { font-size: 0.7rem; color: var(--text-muted); margin-top: 0.4rem; text-align: center; }
+
+  /* ─── SECTION GENERIC ─── */
+  section { padding: 6rem 2.5rem; max-width: 1280px; margin: 0 auto; }
+  .section-label {
+    display: inline-block; font-size: 0.75rem; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.12em;
+    color: var(--purple-mid); background: var(--lavender-light);
+    padding: 0.4rem 1rem; border-radius: 100px; margin-bottom: 1.2rem;
+  }
+  .section-h2 {
+    font-size: clamp(2rem, 4vw, 3.2rem); font-weight: 800;
+    letter-spacing: -0.03em; line-height: 1.1; color: var(--purple);
+    margin-bottom: 1.2rem;
+  }
+  .section-sub { font-size: 1.05rem; color: var(--text-muted); line-height: 1.7; max-width: 540px; }
+
+  /* ─── TRUST MARQUEE ─── */
+  .trust-section {
+    background: var(--white);
+    padding: 2.5rem 0;
+    border-top: 1px solid rgba(61,20,90,0.07);
+    border-bottom: 1px solid rgba(61,20,90,0.07);
+    overflow: hidden;
+  }
+  .trust-label {
+    text-align: center;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--text-muted);
+    margin-bottom: 1.6rem;
+    opacity: 0.7;
+  }
+  .marquee-track-wrap {
+    overflow: hidden;
+    width: 100%;
+    position: relative;
+  }
+  .marquee-track-wrap::before,
+  .marquee-track-wrap::after {
+    content: '';
+    position: absolute;
+    top: 0; bottom: 0;
+    width: 80px;
+    z-index: 2;
+    pointer-events: none;
+  }
+  .marquee-track-wrap::before {
+    left: 0;
+    background: linear-gradient(to right, var(--white), transparent);
+  }
+  .marquee-track-wrap::after {
+    right: 0;
+    background: linear-gradient(to left, var(--white), transparent);
+  }
+  .marquee-track { display: flex; }
+  .marquee-inner {
+    display: flex;
+    align-items: center;
+    gap: 3.5rem;
+    animation: marqueeScroll 28s linear infinite;
+    will-change: transform;
+    white-space: nowrap;
+    padding: 0 1rem;
+  }
+  .marquee-inner:hover { animation-play-state: paused; }
+  .logo-item {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 48px;
+  }
+  .logo-item img {
+    height: 48px;
+    width: auto;
+    max-width: 140px;
+    object-fit: contain;
+    filter: grayscale(100%);
+    opacity: 0.55;
+    transition: filter 0.3s, opacity 0.3s;
+  }
+  .logo-item img:hover {
+    filter: grayscale(0%);
+    opacity: 1;
+  }
+  @keyframes marqueeScroll {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  /* ─── WORK SHOWCASE ─── */
+  .showcase-section {
+    padding: 7rem 2.5rem;
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+  .showcase-header { text-align: center; margin-bottom: 4rem; }
+  .showcase-tabs {
+    display: flex; justify-content: center; gap: 0.5rem;
+    margin-top: 2rem;
+    background: var(--lavender-light);
+    width: fit-content;
+    margin-left: auto; margin-right: auto;
+    border-radius: 100px;
+    padding: 0.3rem;
+  }
+  .showcase-tab {
+    padding: 0.6rem 1.6rem;
+    border: none; background: none; cursor: pointer;
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-weight: 700; font-size: 0.9rem;
+    color: var(--text-muted);
+    border-radius: 100px;
+    transition: all 0.25s;
+  }
+  .showcase-tab.active {
+    background: var(--purple);
+    color: var(--white);
+    box-shadow: 0 4px 16px rgba(61,20,90,0.25);
+  }
+  .showcase-panel { display: none; }
+  .showcase-panel.active { display: block; }
+
+  /* Video panel */
+  .showcase-panel-label {
+    font-size: 0.78rem; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.1em; color: var(--text-muted); margin-bottom: 1.5rem;
+    display: flex; align-items: center; gap: 0.6rem;
+  }
+  .showcase-panel-label::before {
+    content: ''; display: block; width: 20px; height: 2px;
+    background: var(--lavender); border-radius: 2px;
+  }
+  .video-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.2rem;
+  }
+  /* ── Video card: custom thumbnail + click-to-play ── */
+  .video-card {
+    aspect-ratio: 9 / 16;
+    border-radius: 18px;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+    background: #1a0a27;
+    border: 2px solid rgba(207,168,255,0.2);
+  }
+  .video-card:hover {
+    transform: translateY(-6px) scale(1.02);
+    box-shadow: 0 24px 60px rgba(61,20,90,0.28);
+  }
+
+  /* Thumbnail image — fill the card */
+  .video-thumb {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    border-radius: 16px;
+    transition: transform 0.4s, filter 0.3s;
+  }
+  .video-card:hover .video-thumb {
+    transform: scale(1.04);
+    filter: brightness(0.75);
+  }
+
+  /* Dark gradient overlay at bottom */
+  .video-card-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(20,5,35,0.72) 0%, transparent 55%);
+    border-radius: 16px;
+    pointer-events: none;
+  }
+
+  /* Fallback gradient when no thumbnail set */
+  .video-card.no-thumb {
+    background: linear-gradient(160deg, var(--lavender-light) 0%, #c9b0ed 100%);
+    border: 2px dashed rgba(207,168,255,0.6);
+  }
+  .video-card.no-thumb .video-card-overlay { display: none; }
+
+  /* Play button */
+  .video-play-btn {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%) scale(1);
+    width: 60px; height: 60px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.95);
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.35);
+    transition: transform 0.25s, background 0.2s;
+    pointer-events: none;
+  }
+  .video-card:hover .video-play-btn {
+    transform: translate(-50%, -50%) scale(1.12);
+    background: var(--lime);
+  }
+  .video-play-btn svg {
+    width: 22px; height: 22px;
+    fill: var(--purple);
+    margin-left: 4px;
+  }
+
+  /* No-thumb label shown when no image set */
+  .video-no-thumb-label {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 0.8rem; padding: 1rem;
+  }
+  .video-no-thumb-label .vl-icon {
+    width: 48px; height: 48px; border-radius: 50%;
+    background: rgba(61,20,90,0.12);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .video-no-thumb-label .vl-icon svg { width: 18px; height: 18px; fill: var(--purple-mid); margin-left: 3px; }
+  .video-no-thumb-label .vl-text {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: 0.75rem; font-weight: 700;
+    color: var(--purple-mid); text-align: center; line-height: 1.4;
+  }
+  .video-no-thumb-label .vl-tag {
+    font-size: 0.63rem; color: var(--text-muted);
+    background: rgba(255,255,255,0.75);
+    padding: 0.2rem 0.65rem; border-radius: 100px;
+  }
+
+  /* Caption bar at bottom of card */
+  .video-caption {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    padding: 1rem 1rem 0.9rem;
+    pointer-events: none;
+  }
+  .video-caption-title {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: 0.8rem; font-weight: 700;
+    color: rgba(255,255,255,0.95); line-height: 1.3;
+  }
+  .video-caption-sub {
+    font-size: 0.68rem; color: rgba(255,255,255,0.55);
+    margin-top: 0.15rem;
+  }
+
+  /* Graphic panel */
+  .graphic-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.2rem;
+  }
+  .graphic-placeholder {
+    aspect-ratio: 4 / 5;
+    background: linear-gradient(145deg, #f0eaf8 0%, #e2d5f5 100%);
+    border-radius: 16px;
+    position: relative;
+    overflow: hidden;
+    border: 2px dashed rgba(207,168,255,0.5);
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  .graphic-placeholder:hover {
+    transform: translateY(-6px) scale(1.02);
+    box-shadow: 0 24px 60px rgba(61,20,90,0.18);
+    border-style: solid;
+    border-color: var(--lavender);
+  }
+  .graphic-placeholder img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    border-radius: 14px;
+  }
+  .graphic-ph-inner {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 0.7rem; padding: 1rem;
+  }
+  .graphic-ph-icon {
+    width: 44px; height: 44px; border-radius: 12px;
+    background: var(--purple);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .graphic-ph-icon svg { width: 20px; height: 20px; fill: none; stroke: var(--white); stroke-width: 2; }
+  .graphic-ph-text {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: 0.75rem; font-weight: 700;
+    color: var(--purple-mid); text-align: center;
+    line-height: 1.4;
+  }
+  .graphic-ph-tag {
+    font-size: 0.65rem; color: var(--text-muted);
+    background: rgba(255,255,255,0.7);
+    padding: 0.25rem 0.7rem; border-radius: 100px;
+  }
+  .graphic-ph-num {
+    position: absolute; top: 10px; right: 12px;
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: 0.7rem; font-weight: 800;
+    color: var(--lavender); opacity: 0.7;
+  }
+
+  @media (max-width: 900px) {
+    .video-grid { grid-template-columns: repeat(2, 1fr); }
+    .graphic-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 480px) {
+    .video-grid { grid-template-columns: repeat(2, 1fr); gap: 0.8rem; }
+    .graphic-grid { grid-template-columns: repeat(2, 1fr); gap: 0.8rem; }
+  }
+
+  /* ─── BENEFIT SECTION ─── */
+  .benefit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; }
+  .benefit-visual { position: relative; height: 480px; }
+  .benefit-content { }
+  .benefit-list { list-style: none; margin: 1.8rem 0 2.2rem; display: flex; flex-direction: column; gap: 0.9rem; }
+  .benefit-list li {
+    display: flex; align-items: center; gap: 0.8rem;
+    font-size: 1rem; color: var(--text-dark); font-weight: 400;
+  }
+  .benefit-list li::before {
+    content: ''; width: 22px; height: 22px; border-radius: 50%;
+    background: var(--lime); flex-shrink: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%233D145A' stroke-width='3'%3E%3Cpath d='M5 13l4 4L19 7'/%3E%3C/svg%3E");
+    background-size: 14px; background-position: center; background-repeat: no-repeat;
+  }
+
+  /* Benefit visual cards */
+  .bc-1 { top: 0; left: 0; width: 260px; background: var(--purple); color: var(--white); }
+  .bc-1 .bc-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.6; margin-bottom: 0.5rem; }
+  .bc-1 .bc-title { font-family: 'Bricolage Grotesque', sans-serif; font-size: 1.2rem; font-weight: 800; margin-bottom: 1rem; }
+  .bc-tag-row { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .bc-tag { background: rgba(255,255,255,0.15); padding: 0.3rem 0.7rem; border-radius: 100px; font-size: 0.72rem; }
+  .bc-2 { top: 100px; right: -20px; width: 200px; animation: float 4s 0.5s ease-in-out infinite; }
+  .bc-2 .bc2-header { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.8rem; }
+  .bc2-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .bc2-mini-bars { display: flex; gap: 3px; align-items: flex-end; height: 40px; }
+  .bc2-bar { width: 10px; border-radius: 2px 2px 0 0; background: var(--lavender); }
+  .bc-3 { bottom: 60px; left: 20px; width: 250px; animation: float 4s 1s ease-in-out infinite; }
+  .bc3-post { display: flex; align-items: center; gap: 0.8rem; }
+  .bc3-thumb { width: 50px; height: 50px; border-radius: 10px; background: linear-gradient(135deg, var(--lavender) 0%, var(--pink) 100%); flex-shrink: 0; }
+  .bc3-info { flex: 1; }
+  .bc3-title { font-weight: 600; font-size: 0.8rem; color: var(--text-dark); margin-bottom: 0.2rem; }
+  .bc3-meta { font-size: 0.7rem; color: var(--text-muted); }
+  .bc3-divider { height: 1px; background: var(--off-white); margin: 0.8rem 0; }
+  .bc-4 { bottom: 0; right: 30px; animation: float 4s 1.8s ease-in-out infinite; }
+  .bc4-inner { display: flex; align-items: center; gap: 0.6rem; }
+  .bc4-icon { width: 32px; height: 32px; border-radius: 8px; background: var(--lime); display: flex; align-items: center; justify-content: center; font-size: 0.9rem; }
+
+  /* ─── OFFER SECTION ─── */
+  .offer-section {
+    background: linear-gradient(135deg, var(--purple) 0%, #5B1F85 60%, #7C3AED 100%);
+    border-radius: 32px; padding: 5rem 3rem; text-align: center;
+    position: relative; overflow: hidden; max-width: 1280px; margin: 0 auto;
+  }
+  .offer-section::before {
+    content: ''; position: absolute; top: -40%; left: -20%;
+    width: 60%; height: 80%; border-radius: 50%;
+    background: rgba(215,255,101,0.08); pointer-events: none;
+  }
+  .offer-section::after {
+    content: ''; position: absolute; bottom: -30%; right: -10%;
+    width: 50%; height: 60%; border-radius: 50%;
+    background: rgba(207,168,255,0.1); pointer-events: none;
+  }
+  .offer-title { font-family: 'Bricolage Grotesque', sans-serif; font-size: clamp(1.8rem,4vw,3rem); font-weight: 800; color: var(--white); letter-spacing: -0.03em; margin-bottom: 0.5rem; }
+  .offer-subtitle { color: rgba(255,255,255,0.65); font-size: 1rem; margin-bottom: 2.5rem; }
+  .offer-badges { display: flex; justify-content: center; flex-wrap: wrap; gap: 0.8rem; margin-bottom: 2.5rem; }
+  .offer-badge {
+    padding: 0.5rem 1.2rem; border-radius: 100px; font-size: 0.82rem; font-weight: 600;
+    font-family: 'Bricolage Grotesque', sans-serif; letter-spacing: 0.02em;
+  }
+  .badge-lime { background: var(--lime); color: var(--purple); }
+  .badge-pink { background: var(--pink); color: var(--purple); }
+  .badge-white { background: rgba(255,255,255,0.15); color: var(--white); border: 1px solid rgba(255,255,255,0.2); }
+  .offer-card {
+    background: rgba(255,255,255,0.1); backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.15); border-radius: 24px;
+    padding: 2.5rem; max-width: 600px; margin: 0 auto;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+  }
+  .offer-price { font-family: 'Bricolage Grotesque', sans-serif; font-size: 3.5rem; font-weight: 800; color: var(--lime); line-height: 1; margin-bottom: 0.3rem; }
+  .offer-per { color: rgba(255,255,255,0.6); font-size: 0.9rem; margin-bottom: 1.8rem; }
+  .offer-items { list-style: none; display: flex; flex-direction: column; gap: 0.9rem; text-align: left; }
+  .offer-items li { display: flex; align-items: center; gap: 0.8rem; color: rgba(255,255,255,0.9); font-size: 0.95rem; }
+  .offer-check { width: 22px; height: 22px; border-radius: 50%; background: var(--lime); flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+  .offer-check::after { content: '✓'; color: var(--purple); font-size: 0.75rem; font-weight: 700; }
+  .offer-cta { margin-top: 2rem; }
+
+  /* ─── HOW IT WORKS ─── */
+  .how-section { position: relative; text-align: center; padding: 7rem 2.5rem; }
+  .how-bg-text {
+    font-family: 'Bricolage Grotesque', sans-serif; font-size: clamp(5rem, 15vw, 14rem);
+    font-weight: 800; color: transparent;
+    -webkit-text-stroke: 2px rgba(61,20,90,0.07);
+    letter-spacing: -0.05em; line-height: 1;
+    user-select: none; position: relative;
+  }
+  .how-cards-row {
+    display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap;
+    margin-top: -3rem; position: relative; z-index: 2;
+  }
+  .how-card {
+    background: var(--white); border-radius: 20px; padding: 2rem;
+    box-shadow: var(--card-shadow); width: 280px; text-align: left;
+    transition: transform 0.3s, box-shadow 0.3s;
+    border: 1px solid rgba(207,168,255,0.15);
+  }
+  .how-card:nth-child(2) { transform: rotate(-2deg) translateY(-10px); }
+  .how-card:nth-child(3) { transform: rotate(1.5deg); }
+  .how-card:hover { transform: translateY(-8px) rotate(0deg) !important; box-shadow: var(--card-shadow-hover); }
+  .how-num { font-family: 'Bricolage Grotesque', sans-serif; font-size: 2.5rem; font-weight: 800; color: var(--lavender); line-height: 1; margin-bottom: 0.8rem; }
+  .how-title { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 1.1rem; color: var(--purple); margin-bottom: 0.5rem; }
+  .how-desc { font-size: 0.88rem; color: var(--text-muted); line-height: 1.6; }
+
+  /* ─── SOCIAL PROOF ─── */
+  .proof-section { text-align: center; padding: 6rem 2.5rem; background: var(--white); }
+  .proof-stat { font-family: 'Bricolage Grotesque', sans-serif; font-size: clamp(5rem, 12vw, 10rem); font-weight: 800; color: var(--purple); line-height: 1; letter-spacing: -0.05em; }
+  .proof-stat-label { font-size: 1.2rem; color: var(--text-muted); margin-top: 0.3rem; margin-bottom: 3rem; }
+  .testimonials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.2rem; max-width: 1000px; margin: 0 auto; }
+  .testimonial-card { background: var(--off-white); border-radius: 20px; padding: 1.6rem; text-align: left; transition: transform 0.3s; }
+  .testimonial-card:hover { transform: translateY(-4px); }
+  .test-rating { color: #FBBF24; font-size: 0.9rem; margin-bottom: 0.6rem; }
+  .test-quote { font-size: 0.9rem; line-height: 1.65; color: var(--text-dark); margin-bottom: 1rem; font-style: italic; }
+  .test-author2 { display: flex; align-items: center; gap: 0.6rem; }
+  .test-avatar2 { width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, var(--lavender), var(--purple)); }
+  .test-info .test-name2 { font-weight: 600; font-size: 0.82rem; color: var(--text-dark); }
+  .test-info .test-biz { font-size: 0.74rem; color: var(--text-muted); }
+
+  /* ─── VALUE SECTION ─── */
+  .value-section { padding: 6rem 2.5rem; background: var(--off-white); }
+  .value-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; max-width: 1280px; margin: 0 auto; }
+
+  /* ─── GUARANTEE ─── */
+  .guarantee-section { padding: 5rem 2.5rem; }
+  .guarantee-inner { max-width: 900px; margin: 0 auto; text-align: center; }
+  .guarantee-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 2.5rem; }
+  .guarantee-card {
+    background: var(--white); border-radius: 24px; padding: 2.2rem;
+    box-shadow: var(--card-shadow); text-align: left;
+    border: 1px solid rgba(207,168,255,0.2);
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  .guarantee-card:hover { transform: translateY(-6px); box-shadow: var(--card-shadow-hover); }
+  .guarantee-icon { font-size: 2rem; margin-bottom: 1rem; }
+  .guarantee-title { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 1.1rem; color: var(--purple); margin-bottom: 0.6rem; }
+  .guarantee-text { font-size: 0.9rem; color: var(--text-muted); line-height: 1.65; }
+
+  /* ─── FAQ ─── */
+  .faq-section { padding: 5rem 2.5rem; max-width: 800px; margin: 0 auto; }
+  .faq-item { border-bottom: 1px solid rgba(61,20,90,0.1); }
+  .faq-q {
+    width: 100%; background: none; border: none; text-align: left;
+    padding: 1.4rem 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700;
+    font-size: 1rem; color: var(--purple); cursor: pointer;
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 1rem; transition: color 0.2s;
+  }
+  .faq-q:hover { color: var(--purple-mid); }
+  .faq-arrow { font-size: 1.2rem; transition: transform 0.3s; flex-shrink: 0; }
+  .faq-item.open .faq-arrow { transform: rotate(45deg); }
+  .faq-a { max-height: 0; overflow: hidden; transition: max-height 0.4s ease, padding 0.3s; font-size: 0.92rem; color: var(--text-muted); line-height: 1.7; }
+  .faq-item.open .faq-a { max-height: 200px; padding-bottom: 1.2rem; }
+
+  /* ─── FINAL CTA ─── */
+  .final-cta {
+    background: linear-gradient(135deg, var(--purple) 0%, #5B1F85 100%);
+    border-radius: 32px; padding: 6rem 3rem; text-align: center;
+    max-width: 1200px; margin: 0 auto 4rem; position: relative; overflow: hidden;
+  }
+  .final-cta::before {
+    content: ''; position: absolute; top: -50%; right: -10%; width: 500px; height: 500px;
+    border-radius: 50%; background: rgba(215,255,101,0.06); pointer-events: none;
+  }
+  .final-cta-h2 { font-size: clamp(2rem, 4vw, 3.5rem); font-weight: 800; color: var(--white); letter-spacing: -0.03em; margin-bottom: 1rem; max-width: 700px; margin-left: auto; margin-right: auto; line-height: 1.1; }
+  .final-cta-sub { color: rgba(255,255,255,0.65); font-size: 1.05rem; margin-bottom: 2.5rem; max-width: 500px; margin-left: auto; margin-right: auto; line-height: 1.7; }
+  .btn-lime { background: var(--lime); color: var(--purple); border: none; padding: 1rem 2.5rem; border-radius: 100px; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 1rem; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 8px 30px rgba(215,255,101,0.4); }
+  .btn-lime:hover { transform: translateY(-3px) scale(1.03); box-shadow: 0 14px 40px rgba(215,255,101,0.5); }
+
+  /* ─── FOOTER ─── */
+  footer { background: var(--purple); color: rgba(255,255,255,0.7); padding: 3rem 2.5rem; }
+  .footer-inner { max-width: 1280px; margin: 0 auto; display: flex; justify-content: space-between; align-items: flex-start; gap: 2rem; flex-wrap: wrap; }
+  .footer-logo { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 1.4rem; color: var(--white); margin-bottom: 0.5rem; }
+  .footer-logo span { color: var(--lavender); }
+  .footer-tagline { font-size: 0.82rem; color: rgba(255,255,255,0.5); }
+  .footer-links { display: flex; gap: 2rem; flex-wrap: wrap; }
+  .footer-links a { color: rgba(255,255,255,0.65); text-decoration: none; font-size: 0.88rem; transition: color 0.2s; }
+  .footer-links a:hover { color: var(--white); }
+  .footer-contact { text-align: right; }
+  .footer-contact a { display: block; color: rgba(255,255,255,0.65); text-decoration: none; font-size: 0.88rem; transition: color 0.2s; margin-bottom: 0.3rem; }
+  .footer-contact a:hover { color: var(--white); }
+  .footer-bottom { max-width: 1280px; margin: 2rem auto 0; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1); font-size: 0.8rem; color: rgba(255,255,255,0.35); text-align: center; }
+
+  /* ─── STICKY CTA ─── */
+  .sticky-cta {
+    position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%);
+    z-index: 90; opacity: 0; pointer-events: none;
+    transition: opacity 0.4s, transform 0.4s;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--purple); color: var(--white);
+    padding: 0.8rem 2rem; border-radius: 100px;
+    font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 0.9rem;
+    box-shadow: 0 8px 30px rgba(61,20,90,0.5); cursor: pointer; border: none;
+    white-space: nowrap;
+  }
+  .sticky-cta.visible { opacity: 1; pointer-events: auto; transform: translateX(-50%) translateY(0); }
+
+  /* ─── WA BUTTON ─── */
+  .wa-btn {
+    position: fixed; bottom: 2rem; right: 2rem; z-index: 90;
+    width: 56px; height: 56px; border-radius: 50%;
+    background: #25D366; color: white; border: none; cursor: pointer;
+    font-size: 1.5rem; display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 6px 24px rgba(37,211,102,0.4);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .wa-btn:hover { transform: scale(1.1); box-shadow: 0 10px 32px rgba(37,211,102,0.5); }
+
+  /* ─── ANIMATIONS ─── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(0.85); }
+  }
+  @keyframes barFill {
+    from { width: 0; }
+    to { width: 72%; }
+  }
+
+  .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 900px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+    .nav-hamburger { display: flex; }
+    .hero { grid-template-columns: 1fr; gap: 3rem; padding: 7rem 1.5rem 3rem; }
+    .hero-right { width: 100%; }
+    .benefit-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+    .benefit-visual { height: 320px; }
+    .value-grid { grid-template-columns: 1fr; }
+    .guarantee-cards { grid-template-columns: 1fr; }
+    .how-cards-row { flex-direction: column; align-items: center; margin-top: -1rem; }
+    .how-card:nth-child(2) { transform: none; }
+    .how-card:nth-child(3) { transform: none; }
+    .footer-inner { flex-direction: column; }
+    .footer-contact { text-align: left; }
+    section { padding: 4rem 1.5rem; }
+  }
+  @media (max-width: 600px) {
+    .hero-btns { flex-direction: column; }
+    .hero-btns button { width: 100%; }
+    .testimonials-grid { grid-template-columns: 1fr; }
+    .offer-section { padding: 3rem 1.5rem; }
+    .final-cta { padding: 3.5rem 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="navbar">
+  <div class="nav-logo">cazzed<span>.</span></div>
+  <ul class="nav-links">
+    <li><a href="#benefits">What We Do</a></li>
+    <li><a href="#offer">Pricing</a></li>
+    <li><a href="#showcase">Our Work</a></li>
+      <li><a href="#proof">Results</a></li>
+    <li><a href="#faq">FAQ</a></li>
+  </ul>
+  <button class="nav-cta" onclick="scrollToCTA()">Claim RM999 Offer</button>
+  <button class="nav-hamburger" aria-label="Menu" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- HERO -->
+<section style="padding-top:0;padding-bottom:0;">
+  <div class="hero">
+    <div class="hero-left">
+      <div class="hero-badge">
+        <span class="dot"></span>
+        Now accepting new clients — limited spots
+      </div>
+      <h1 class="hero-h1">
+        Stop Posting <span class="accent">Random Content</span> That Doesn't Grow Your Brand
+      </h1>
+      <p class="hero-sub">
+        We help small businesses stay <strong>active, professional &amp; trusted</strong> online — without hiring an in-house team. Strategic monthly content, short reels, copywriting, and direction done for you.
+      </p>
+      <div class="hero-btns">
+        <button class="btn-primary" onclick="scrollToCTA()">Claim RM999 Offer</button>
+        <button class="btn-secondary" onclick="document.getElementById('proof').scrollIntoView({behavior:'smooth'})">View Sample Work</button>
+      </div>
+    </div>
+    <div class="hero-right">
+      <!-- YouTube Video Placeholder -->
+      <a class="hero-video-wrap" href="https://www.youtube.com/watch?v=Uj5c5F1uxkE" target="_blank" rel="noopener" aria-label="Watch our video on YouTube">
+        <div class="hero-video-ratio">
+          <!-- Replace the src below with your cover image path, e.g. src="cover.jpg" -->
+          <img class="hero-video-cover" src="showreels.gif" alt="Cazzed Social — Watch Our Video" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+          <!-- Fallback gradient shown when no cover image is set -->
+          <div class="hero-video-fallback"></div>
+          <!-- Play button overlay -->
+          <div class="hero-video-play">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <polygon points="6,3 21,12 6,21" fill="var(--purple)"/>
+            </svg>
+          </div>
+          <!-- YouTube badge -->
+          <div class="hero-video-badge">
+            <svg width="18" height="13" viewBox="0 0 18 13" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="18" height="13" rx="3" fill="#FF0000"/><polygon points="7,3.5 13,6.5 7,9.5" fill="white"/></svg>
+            Watch on YouTube
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST MARQUEE SECTION -->
+<div class="trust-section">
+  <p class="trust-label">Trusted by brands across Malaysia</p>
+  <div class="marquee-track-wrap">
+    <div class="marquee-track">
+      <div class="marquee-inner" id="marqueeInner">
+        <div class="logo-item"><img src="banana.jpg" alt="BananaBro"></div>
+        <div class="logo-item"><img src="haus.jpg" alt="Haus Boom"></div>
+        <div class="logo-item"><img src="caring.jpg" alt="Caring Pharmacy"></div>
+        <div class="logo-item"><img src="ecdt.jpg" alt="El Cabra"></div>
+        <div class="logo-item"><img src="aia.jpg" alt="AIA"></div>
+        <div class="logo-item"><img src="kdn.jpg" alt="Malaysia Coat of Arms"></div>
+        <div class="logo-item"><img src="88trader.jpg" alt="Trader"></div>
+        <div class="logo-item"><img src="vtr.jpg" alt="Vestrado"></div>
+        <div class="logo-item"><img src="10cs.jpg" alt="Logo Red"></div>
+        <div class="logo-item"><img src="astro.jpg" alt="Astro"></div>
+        <div class="logo-item"><img src="tiny.jpg" alt="Tiny Twins"></div>
+        <div class="logo-item"><img src="wb.jpg" alt="Warner Bros"></div>
+        <div class="logo-item"><img src="yonex.jpg" alt="Yonex"></div>
+	<div class="logo-item"><img src="prose.png" alt="Yonex"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- BENEFIT SECTION -->
+<div id="benefits" style="background:var(--white); padding: 2rem 0;">
+<section class="reveal">
+  <div class="benefit-grid">
+    <div class="benefit-visual">
+      <!-- Content strategy card -->
+      <div class="float-card bc-1" style="transform:rotate(-2deg);">
+        <div class="bc-label">Content Strategy</div>
+        <div class="bc-title">Monthly Direction Plan</div>
+        <div class="bc-tag-row">
+          <span class="bc-tag">Brand Voice</span>
+          <span class="bc-tag">Hooks</span>
+          <span class="bc-tag">Hashtags</span>
+          <span class="bc-tag">CTAs</span>
+        </div>
+      </div>
+      <!-- Mini chart card -->
+      <div class="float-card bc-2">
+        <div class="bc2-header">
+          <div class="bc2-dot" style="background:var(--lime);"></div>
+          <span style="font-size:0.75rem;font-weight:600;color:var(--text-dark);">Weekly Reach</span>
+        </div>
+        <div class="bc2-mini-bars" id="bc2-bars"></div>
+      </div>
+      <!-- Post queue card -->
+      <div class="float-card bc-3">
+        <div class="bc3-post">
+          <div class="bc3-thumb"></div>
+          <div class="bc3-info">
+            <div class="bc3-title">Raya Promotion Post</div>
+            <div class="bc3-meta">Scheduled · Mon 9am</div>
+          </div>
+        </div>
+        <div class="bc3-divider"></div>
+        <div class="bc3-post">
+          <div class="bc3-thumb" style="background:linear-gradient(135deg,#D946EF,#7C3AED);"></div>
+          <div class="bc3-info">
+            <div class="bc3-title">Product Reel — 15s</div>
+            <div class="bc3-meta">Ready to post · Wed</div>
+          </div>
+        </div>
+      </div>
+      <!-- Delivered badge -->
+      <div class="float-card bc-4">
+        <div class="bc4-inner">
+          <div class="bc4-icon">✓</div>
+          <div>
+            <div style="font-weight:700;font-size:0.82rem;color:var(--purple);">Content Delivered</div>
+            <div style="font-size:0.7rem;color:var(--text-muted);">4 posts + 2 reels ready</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="benefit-content">
+      <span class="section-label">What We Do</span>
+      <h2 class="section-h2">Everything You Need To Stay Active Online</h2>
+      <p class="section-sub">We don't just design posts. We help your business maintain the kind of presence that builds trust and keeps customers coming back.</p>
+      <ul class="benefit-list">
+        <li>Stay visible to your target audience</li>
+        <li>Build trust with professional content</li>
+        <li>Maintain consistency without the stress</li>
+        <li>Create stronger brand perception</li>
+        <li>Get more enquiries from social media</li>
+      </ul>
+      <button class="btn-primary" onclick="scrollToCTA()">Start Growing Today</button>
+    </div>
+  </div>
+</section>
+</div>
+
+<!-- OFFER SECTION -->
+<div style="padding: 4rem 2.5rem;" id="offer">
+<div class="offer-section reveal">
+  <div class="offer-badges">
+    <span class="offer-badge badge-lime">RM999 Only</span>
+    <span class="offer-badge badge-pink">Founding Client</span>
+    <span class="offer-badge badge-white">⚡ Limited Offer</span>
+    <span class="offer-badge badge-white">🚀 Fast Delivery</span>
+  </div>
+  <div class="offer-title">CAZZED SOCIAL STARTER™</div>
+  <div class="offer-subtitle">Everything a growing business needs to look professional online</div>
+  <div class="offer-card">
+    <div class="offer-price">RM999</div>
+    <div class="offer-per">per month · less than RM34/day</div>
+    <ul class="offer-items">
+      <li><span class="offer-check"></span>4 Professionally Designed Posts</li>
+      <li><span class="offer-check"></span>2 Short-Form Reels (15–30s)</li>
+      <li><span class="offer-check"></span>Copywriting Included for All Posts</li>
+      <li><span class="offer-check"></span>Monthly Content Direction &amp; Strategy</li>
+      <li><span class="offer-check"></span>WhatsApp Support &amp; Communication</li>
+    </ul>
+    <div class="offer-cta">
+      <button class="btn-lime" onclick="scrollToCTA()">Claim This Offer Now</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- HOW IT WORKS -->
+<div id="how" style="padding: 0 2.5rem;">
+<div class="how-section reveal">
+  <div class="how-bg-text">HOW IT WORKS</div>
+  <div class="how-cards-row">
+    <div class="how-card reveal reveal-delay-1">
+      <div class="how-num">01</div>
+      <div class="how-title">Submit Brand Details</div>
+      <div class="how-desc">Fill in a quick brief about your business, goals, audience, and brand personality. Takes about 10 minutes.</div>
+    </div>
+    <div class="how-card reveal reveal-delay-2">
+      <div class="how-num">02</div>
+      <div class="how-title">We Create Content</div>
+      <div class="how-desc">Our team designs your posts, writes copy, and produces reels aligned with your brand direction.</div>
+    </div>
+    <div class="how-card reveal reveal-delay-3">
+      <div class="how-num">03</div>
+      <div class="how-title">You Receive Ready-To-Post Assets</div>
+      <div class="how-desc">Get all your content delivered in a neat package, ready to post whenever you want. No guesswork.</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- WORK SHOWCASE -->
+<div id="showcase" style="background:var(--off-white);">
+<div class="showcase-section reveal">
+  <div class="showcase-header">
+    <span class="section-label">Our Work</span>
+    <h2 class="section-h2">Content That Actually <span style="color:var(--purple-mid);">Stops the Scroll</span></h2>
+    <p class="section-sub" style="margin: 0.8rem auto 0; max-width: 560px; text-align:center;">From thumb-stopping reels to polished feed posts — see how we make Malaysian brands look world-class online.</p>
+    <div class="showcase-tabs">
+      <button class="showcase-tab active" onclick="switchTab('video', this)">🎬 Video Works</button>
+      <button class="showcase-tab" onclick="switchTab('graphic', this)">🎨 Graphic Works</button>
+    </div>
+  </div>
+
+  <!-- VIDEO WORKS PANEL -->
+  <div class="showcase-panel active" id="panel-video">
+    <div class="showcase-panel-label">Short-form Video &amp; Reels</div>
+    <div class="video-grid">
+
+      <!--
+        ════════════════════════════════════════════
+        HOW TO FILL IN EACH VIDEO CARD:
+
+        1. Set your thumbnail:
+           Uncomment the <img> line and set src to your image file.
+           Then remove class "no-thumb" from the card's div.
+
+        2. Set your YouTube Video ID:
+           Replace  data-videoid="YOUR_VIDEO_ID"
+           e.g. https://youtu.be/dQw4w9WgXcQ  →  dQw4w9WgXcQ
+
+        3. Optionally update the caption title/subtitle.
+
+        Clicking the card opens the YouTube video in a new tab.
+        ════════════════════════════════════════════
+      -->
+
+      <!-- Video Card 1 -->
+      <div class="video-card no-thumb" data-videoid="2iidJP8NNEo" onclick="playVideo(this)">
+        <!-- Replace the img below with your thumbnail. Remove class "no-thumb" from the card above once set. -->
+        <img class="video-thumb" src="conjuring.png" alt="Video 1 thumbnail">
+        <div class="video-card-overlay"></div>
+        <!--<div class="video-no-thumb-label">
+          <div class="vl-icon"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+          <div class="vl-text">Add your thumbnail<br>&amp; Video ID</div>
+          <span class="vl-tag">See comment above</span>
+        </div>-->
+        <div class="video-play-btn">
+          <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        </div>
+        <div class="video-caption">
+          <div class="video-caption-title">Warner Bros: The Conjuring World Tour</div>
+          <div class="video-caption-sub">Short-form · Reel</div>
+        </div>
+      </div>
+
+      <!-- Video Card 2 -->
+      <div class="video-card no-thumb" data-videoid="ALfH5MqUoFQ" onclick="playVideo(this)">
+        <!-- Replace the img below with your thumbnail. Remove class "no-thumb" from the card above once set. -->
+        <img class="video-thumb" src="caringPromo.png" alt="Video 1 thumbnail">
+        <div class="video-card-overlay"></div>
+        <!--<div class="video-no-thumb-label">
+          <div class="vl-icon"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+          <div class="vl-text">Add your thumbnail<br>&amp; Video ID</div>
+          <span class="vl-tag">See comment above</span>
+        </div>-->
+        <div class="video-play-btn">
+          <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        </div>
+        <div class="video-caption">
+          <div class="video-caption-title">Caring Pharmacy : Mid Year Sales</div>
+          <div class="video-caption-sub">Short-form · Reel</div>
+        </div>
+      </div>
+
+      <!-- Video Card 3 -->
+      <div class="video-card no-thumb" data-videoid="56fFbonjVtU" onclick="playVideo(this)">
+        <!-- Replace the img below with your thumbnail. Remove class "no-thumb" from the card above once set. -->
+        <img class="video-thumb" src="property.png" alt="Video 1 thumbnail">
+        <div class="video-card-overlay"></div>
+        <!--<div class="video-no-thumb-label">
+          <div class="vl-icon"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+          <div class="vl-text">Add your thumbnail<br>&amp; Video ID</div>
+          <span class="vl-tag">See comment above</span>
+        </div>-->
+        <div class="video-play-btn">
+          <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        </div>
+        <div class="video-caption">
+          <div class="video-caption-title">Property Listing KOL's Reels</div>
+          <div class="video-caption-sub">Short-form · Reel</div>
+        </div>
+      </div>
+
+      <!-- Video Card 4 -->
+      <div class="video-card no-thumb" data-videoid="koeOd5HG4bc" onclick="playVideo(this)">
+        <!-- Replace the img below with your thumbnail. Remove class "no-thumb" from the card above once set. -->
+        <img class="video-thumb" src="astrox.png" alt="Video 1 thumbnail">
+        <div class="video-card-overlay"></div>
+        <!--<div class="video-no-thumb-label">
+          <div class="vl-icon"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+          <div class="vl-text">Add your thumbnail<br>&amp; Video ID</div>
+          <span class="vl-tag">See comment above</span>
+        </div>-->
+        <div class="video-play-btn">
+          <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        </div>
+        <div class="video-caption">
+          <div class="video-caption-title">Yonex Astrox Promotion Reels</div>
+          <div class="video-caption-sub">Short-form · Reel</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- GRAPHIC WORKS PANEL -->
+  <div class="showcase-panel" id="panel-graphic">
+    <div class="showcase-panel-label">Social Media Graphic Design</div>
+    <div class="graphic-grid">
+
+      <div class="graphic-placeholder">
+        <span class="graphic-ph-num">01</span>
+        <img src="graphic1.jpg" alt="Work sample">
+          <div class="graphic-ph-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>
+          <div class="graphic-ph-text">Graphic Post<br>Goes Here</div>
+          <span class="graphic-ph-tag">Replace with your image</span>
+       
+        <!-- TO EMBED: replace div.graphic-ph-inner with: <img src="your-image.jpg" alt="Work sample"> -->
+      </div>
+
+      <div class="graphic-placeholder">
+        <span class="graphic-ph-num">02</span>
+        <img src="graphic2.jpg" alt="Work sample">
+          <div class="graphic-ph-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>
+          <div class="graphic-ph-text">Graphic Post<br>Goes Here</div>
+          <span class="graphic-ph-tag">Replace with your image</span>
+       
+        <!-- TO EMBED: replace div.graphic-ph-inner with: <img src="your-image.jpg" alt="Work sample"> -->
+      </div>
+
+      <div class="graphic-placeholder">
+        <span class="graphic-ph-num">03</span>
+        <img src="graphic3.jpg" alt="Work sample">
+          <div class="graphic-ph-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>
+          <div class="graphic-ph-text">Graphic Post<br>Goes Here</div>
+          <span class="graphic-ph-tag">Replace with your image</span>
+       
+        <!-- TO EMBED: replace div.graphic-ph-inner with: <img src="your-image.jpg" alt="Work sample"> -->
+      </div>
+
+      <div class="graphic-placeholder">
+        <span class="graphic-ph-num">04</span>
+        <img src="graphic4.jpg" alt="Work sample">
+          <div class="graphic-ph-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>
+          <div class="graphic-ph-text">Graphic Post<br>Goes Here</div>
+          <span class="graphic-ph-tag">Replace with your image</span>
+       
+        <!-- TO EMBED: replace div.graphic-ph-inner with: <img src="your-image.jpg" alt="Work sample"> -->
+      </div>
+
+      <div class="graphic-placeholder">
+        <span class="graphic-ph-num">05</span>
+        <img src="graphic5.jpg" alt="Work sample">
+          <div class="graphic-ph-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>
+          <div class="graphic-ph-text">Graphic Post<br>Goes Here</div>
+          <span class="graphic-ph-tag">Replace with your image</span>
+       
+        <!-- TO EMBED: replace div.graphic-ph-inner with: <img src="your-image.jpg" alt="Work sample"> -->
+      </div>
+
+      <div class="graphic-placeholder">
+        <span class="graphic-ph-num">06</span>
+        <img src="graphic6.jpg" alt="Work sample">
+          <div class="graphic-ph-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>
+          <div class="graphic-ph-text">Graphic Post<br>Goes Here</div>
+          <span class="graphic-ph-tag">Replace with your image</span>
+       
+        <!-- TO EMBED: replace div.graphic-ph-inner with: <img src="your-image.jpg" alt="Work sample"> -->
+      </div>
+
+      <div class="graphic-placeholder">
+        <span class="graphic-ph-num">07</span>
+        <img src="graphic7.jpg" alt="Work sample">
+          <div class="graphic-ph-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>
+          <div class="graphic-ph-text">Graphic Post<br>Goes Here</div>
+          <span class="graphic-ph-tag">Replace with your image</span>
+       
+        <!-- TO EMBED: replace div.graphic-ph-inner with: <img src="your-image.jpg" alt="Work sample"> -->
+      </div>
+
+      <div class="graphic-placeholder">
+        <span class="graphic-ph-num">08</span>
+        <img src="graphic8.jpg" alt="Work sample">
+          <div class="graphic-ph-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>
+          <div class="graphic-ph-text">Graphic Post<br>Goes Here</div>
+          <span class="graphic-ph-tag">Replace with your image</span>
+       
+        <!-- TO EMBED: replace div.graphic-ph-inner with: <img src="your-image.jpg" alt="Work sample"> -->
+      </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- SOCIAL PROOF -->
+<div id="proof" style="background:var(--white);">
+<div class="proof-section reveal">
+  <span class="section-label">Social Proof</span>
+  <h2 class="section-h2" style="max-width:600px;margin:0 auto 0.5rem;">Businesses Love Working With Cazzed</h2>
+  <div class="proof-stat">200+</div>
+  <div class="proof-stat-label">Brands & businesses supported across Malaysia</div>
+  <div class="testimonials-grid">
+    <div class="testimonial-card">
+      <div class="test-rating">★★★★★</div>
+      <div class="test-quote">"Our Instagram went from zero engagement to getting DMs every week. Worth every ringgit."</div>
+      <div class="test-author2">
+        <div class="test-avatar2"></div>
+        <div class="test-info">
+          <div class="test-name2">Amirah R.</div>
+          <div class="test-biz">Bakery, Subang Jaya</div>
+        </div>
+      </div>
+    </div>
+    <div class="testimonial-card">
+      <div class="test-rating">★★★★★</div>
+      <div class="test-quote">"I was skeptical at first but the content they produce is genuinely better than what I'd hire someone full-time for."</div>
+      <div class="test-author2">
+        <div class="test-avatar2" style="background:linear-gradient(135deg,#D7FF65,#5B1F85);"></div>
+        <div class="test-info">
+          <div class="test-name2">David Tan</div>
+          <div class="test-biz">Clinic, Penang</div>
+        </div>
+      </div>
+    </div>
+    <div class="testimonial-card">
+      <div class="test-rating">★★★★★</div>
+      <div class="test-quote">"Fast delivery, always on brand, and the WhatsApp support makes it feel like they're part of my team."</div>
+      <div class="test-author2">
+        <div class="test-avatar2" style="background:linear-gradient(135deg,#FFD6F5,#3D145A);"></div>
+        <div class="test-info">
+          <div class="test-name2">Nurul H.</div>
+          <div class="test-biz">Boutique, KL</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- VALUE SECTION -->
+<div class="value-section">
+<div class="value-grid reveal">
+  <div>
+    <span class="section-label">Why Cazzed</span>
+    <h2 class="section-h2">Work Smarter, Look More Professional</h2>
+    <p class="section-sub">Cazzed helps businesses maintain a professional online presence without the stress of managing content internally.</p>
+    <div style="margin:2rem 0;display:flex;flex-direction:column;gap:1rem;">
+      <div style="background:var(--white);border-radius:16px;padding:1.2rem 1.4rem;box-shadow:0 4px 20px rgba(61,20,90,0.07);display:flex;align-items:center;gap:1rem;">
+        <div style="width:40px;height:40px;border-radius:12px;background:var(--lime);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;">💡</div>
+        <div>
+          <div style="font-weight:600;font-size:0.9rem;color:var(--purple);">No in-house hire needed</div>
+          <div style="font-size:0.8rem;color:var(--text-muted);">Save RM3,000–RM8,000/month on salaries</div>
+        </div>
+      </div>
+      <div style="background:var(--white);border-radius:16px;padding:1.2rem 1.4rem;box-shadow:0 4px 20px rgba(61,20,90,0.07);display:flex;align-items:center;gap:1rem;">
+        <div style="width:40px;height:40px;border-radius:12px;background:var(--lavender-light);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;">⏱</div>
+        <div>
+          <div style="font-weight:600;font-size:0.9rem;color:var(--purple);">Get your time back</div>
+          <div style="font-size:0.8rem;color:var(--text-muted);">Stop spending hours on Canva every week</div>
+        </div>
+      </div>
+      <div style="background:var(--white);border-radius:16px;padding:1.2rem 1.4rem;box-shadow:0 4px 20px rgba(61,20,90,0.07);display:flex;align-items:center;gap:1rem;">
+        <div style="width:40px;height:40px;border-radius:12px;background:var(--pink);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;">📈</div>
+        <div>
+          <div style="font-weight:600;font-size:0.9rem;color:var(--purple);">Strategic, not random</div>
+          <div style="font-size:0.8rem;color:var(--text-muted);">Content designed to convert, not just look pretty</div>
+        </div>
+      </div>
+    </div>
+    <button class="btn-primary" onclick="scrollToCTA()">Claim Founding Client Offer</button>
+  </div>
+  <div style="position:relative;">
+    <div style="background:linear-gradient(135deg,var(--purple) 0%,#7C3AED 100%);border-radius:28px;padding:2.5rem;color:white;position:relative;overflow:hidden;">
+      <div style="position:absolute;top:-30px;right:-30px;width:120px;height:120px;border-radius:50%;background:rgba(215,255,101,0.1);"></div>
+      <div style="font-size:0.75rem;text-transform:uppercase;letter-spacing:0.1em;opacity:0.6;margin-bottom:0.5rem;">Compare the cost</div>
+      <div style="font-family:'Bricolage Grotesque',sans-serif;font-size:1.4rem;font-weight:800;margin-bottom:1.5rem;">Cazzed vs. In-House</div>
+      <div style="display:flex;flex-direction:column;gap:0.8rem;">
+        <div style="background:rgba(255,255,255,0.1);border-radius:12px;padding:0.9rem 1rem;display:flex;justify-content:space-between;align-items:center;">
+          <span style="font-size:0.88rem;">Social Media Executive</span>
+          <span style="font-family:'Bricolage Grotesque',sans-serif;font-weight:800;color:#FF8A8A;">RM3,000–8,000/mo</span>
+        </div>
+        <div style="background:rgba(255,255,255,0.1);border-radius:12px;padding:0.9rem 1rem;display:flex;justify-content:space-between;align-items:center;">
+          <span style="font-size:0.88rem;">Freelancer (design only)</span>
+          <span style="font-family:'Bricolage Grotesque',sans-serif;font-weight:800;color:#FF8A8A;">RM800–2,000/mo</span>
+        </div>
+        <div style="background:rgba(215,255,101,0.15);border:1px solid rgba(215,255,101,0.4);border-radius:12px;padding:0.9rem 1rem;display:flex;justify-content:space-between;align-items:center;">
+          <span style="font-size:0.88rem;font-weight:600;">Cazzed Social Starter™</span>
+          <span style="font-family:'Bricolage Grotesque',sans-serif;font-weight:800;color:var(--lime);">RM999/mo ✓</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- GUARANTEE SECTION -->
+<div style="background:var(--white);padding:2rem 0;">
+<section id="guarantee" class="guarantee-inner reveal" style="max-width:900px;padding:4rem 2.5rem;">
+  <span class="section-label">Our Promise</span>
+  <h2 class="section-h2" style="max-width:600px;margin:0 auto 0.5rem;">Our Guarantee</h2>
+  <p class="section-sub" style="margin:0 auto 2rem;text-align:center;">We stand behind every piece of content we create for you.</p>
+  <div class="guarantee-cards">
+    <div class="guarantee-card">
+      <div class="guarantee-icon">🎨</div>
+      <div class="guarantee-title">Content Satisfaction Guarantee</div>
+      <div class="guarantee-text">If the first content batch doesn't align with your brand direction, we'll revise it until it's perfectly aligned. No arguments, no extra charges.</div>
+    </div>
+    <div class="guarantee-card">
+      <div class="guarantee-icon">⚡</div>
+      <div class="guarantee-title">Delivery Guarantee</div>
+      <div class="guarantee-text">If delivery exceeds the agreed timeline, we'll provide 1 extra content piece absolutely FREE as compensation. We respect your time.</div>
+    </div>
+  </div>
+</section>
+</div>
+
+<!-- FAQ -->
+<div id="faq">
+<section class="faq-section reveal">
+  <span class="section-label">FAQ</span>
+  <h2 class="section-h2" style="margin-bottom:2.5rem;">Common Questions</h2>
+  <div class="faq-item">
+    <button class="faq-q" onclick="toggleFaq(this)">
+      How long is delivery? <span class="faq-arrow">+</span>
+    </button>
+    <div class="faq-a">We deliver your first content batch within 5–7 business days after receiving your brand brief. Subsequent monthly batches are delivered within 3–5 days.</div>
+  </div>
+  <div class="faq-item">
+    <button class="faq-q" onclick="toggleFaq(this)">
+      Is this suitable for new businesses? <span class="faq-arrow">+</span>
+    </button>
+    <div class="faq-a">Absolutely! In fact, starting with a solid content strategy from day one is one of the best things a new business can do. We'll help you establish your brand voice and visual identity.</div>
+  </div>
+  <div class="faq-item">
+    <button class="faq-q" onclick="toggleFaq(this)">
+      Can I request revisions? <span class="faq-arrow">+</span>
+    </button>
+    <div class="faq-a">Yes — each batch includes up to 2 rounds of revisions. If the content doesn't feel right for your brand, just let us know and we'll adjust it to align with your direction.</div>
+  </div>
+  <div class="faq-item">
+    <button class="faq-q" onclick="toggleFaq(this)">
+      Can I add more content? <span class="faq-arrow">+</span>
+    </button>
+    <div class="faq-a">Yes! We offer add-on packages for additional posts, reels, Stories, and special campaigns. Talk to us on WhatsApp and we'll customise a plan that suits your needs.</div>
+  </div>
+  <div class="faq-item">
+    <button class="faq-q" onclick="toggleFaq(this)">
+      Do you handle posting? <span class="faq-arrow">+</span>
+    </button>
+    <div class="faq-a">The Starter package delivers ready-to-post content for you to upload. We provide recommended posting schedules and captions. Managed posting (we post for you) is available as an add-on service.</div>
+  </div>
+</section>
+</div>
+
+<!-- FINAL CTA -->
+<div id="cta" style="padding: 2rem 2.5rem 0;">
+<div class="final-cta reveal">
+  <h2 class="final-cta-h2">Ready To Build A More Professional Online Presence?</h2>
+  <p class="final-cta-sub">Stop leaving your social media inactive. Let Cazzed help your brand stay active, trusted and visually professional online.</p>
+  <button class="btn-lime" onclick="window.open('https://wa.me/60124636026?text=Hi%20Cazzed!%20I%20want%20to%20claim%20the%20RM999%20offer','_blank')">Start Your Project Today</button>
+</div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-logo">cazzed<span>.</span></div>
+      <div class="footer-tagline">Content that grows your brand.</div>
+    </div>
+    <div class="footer-links">
+      <a href="#benefits">What We Do</a>
+      <a href="#offer">Pricing</a>
+      <a href="#proof">Results</a>
+      <a href="#guarantee">Guarantee</a>
+      <a href="#faq">FAQ</a>
+    </div>
+    <div class="footer-contact">
+      <a href="https://wa.me/60124636026">📱 WhatsApp Us</a>
+      <a href="mailto:ugotcazzed@gmail.com">✉️ ugotcazzed@gmail.com</a>
+    </div>
+  </div>
+  <div class="footer-bottom">© 2025 Cazzed Social. All rights reserved. · Made in Malaysia 🇲🇾</div>
+</footer>
+
+<!-- STICKY CTA -->
+<button class="sticky-cta" id="stickyCta" onclick="scrollToCTA()">🚀 Claim RM999 Offer</button>
+
+<!-- WA BUTTON -->
+<button class="wa-btn" onclick="window.open('https://wa.me/60124636026?text=Hi%20Cazzed!%20I%20want%20to%20know%20more','_blank')" aria-label="WhatsApp">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="28" height="28">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+  </svg>
+</button>
+
+<script>
+  // Marquee seamless loop — duplicate items
+  (function() {
+    const inner = document.getElementById('marqueeInner');
+    if (!inner) return;
+    const clone = inner.cloneNode(true);
+    clone.id = '';
+    clone.setAttribute('aria-hidden', 'true');
+    inner.parentElement.appendChild(clone);
+  })();
+
+  // Video card: click thumbnail → open YouTube in new tab
+  function playVideo(card) {
+    const videoId = card.dataset.videoid;
+    if (!videoId || videoId === 'YOUR_VIDEO_ID') return;
+    window.open('https://www.youtube.com/watch?v=' + videoId, '_blank');
+  }
+
+  // Showcase tab switcher
+  function switchTab(tab, btn) {
+    document.querySelectorAll('.showcase-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.showcase-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('panel-' + tab).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  // BC2 bars
+  const bc2bars = document.getElementById('bc2-bars');
+  if (bc2bars) {
+    const bh = [20, 28, 22, 35, 30, 38, 33];
+    bh.forEach((h, i) => {
+      const b = document.createElement('div');
+      b.className = 'bc2-bar';
+      b.style.height = h + 'px';
+      if (i === 5 || i === 6) b.style.background = 'var(--purple)';
+      bc2bars.appendChild(b);
+    });
+  }
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); }
+    });
+  }, { threshold: 0.12 });
+  reveals.forEach(r => observer.observe(r));
+
+  // Sticky CTA
+  const stickyCta = document.getElementById('stickyCta');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 600) stickyCta.classList.add('visible');
+    else stickyCta.classList.remove('visible');
+  });
+
+  // FAQ toggle
+  function toggleFaq(btn) {
+    const item = btn.closest('.faq-item');
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
+  }
+
+  // Scroll to CTA
+  function scrollToCTA() {
+    document.getElementById('cta').scrollIntoView({ behavior: 'smooth' });
+  }
+
+  // Mobile menu toggle
+  function toggleMenu() {
+    const links = document.querySelector('.nav-links');
+    links.style.display = links.style.display === 'flex' ? 'none' : 'flex';
+    links.style.flexDirection = 'column';
+    links.style.position = 'absolute';
+    links.style.top = '70px';
+    links.style.left = '0';
+    links.style.right = '0';
+    links.style.background = 'rgba(247,244,250,0.98)';
+    links.style.padding = '1.5rem 2.5rem';
+    links.style.backdropFilter = 'blur(20px)';
+    links.style.zIndex = '99';
+  }
+</script>
+</body>
+</html>
